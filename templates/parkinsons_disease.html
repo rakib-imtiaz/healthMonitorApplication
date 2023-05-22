@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Parkinson's Disease Prediction</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+
+<body>
+    <div id="parkinson-container" class="container">
+        <h1>Parkinson's Disease Prediction</h1>
+        <form action="/predict" method="post">
+
+            <div class="input-group">
+                <label for="name">Name: </label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="input-group">
+                <label for="age">Age: </label>
+                <input type="text" id="age" name="age" required>
+            </div>
+            <div class="input-group">
+                <label for="sex">Sex: </label>
+                <input type="text" id="sex" name="sex" required>
+            </div>
+            <div class="input-group">
+                <label for="test_time">Test Time: </label>
+                <input type="text" id="test_time" name="test_time" required>
+            </div>
+
+            <div class="input-group">
+                <label for="MDVP_Fo_Hz">MDVP:Fo(Hz) (88.333 to 260.105):</label>
+                <input type="text" id="MDVP_Fo_Hz" name="MDVP_Fo_Hz" required>
+            </div>
+            <div class="input-group">
+
+                <label for="MDVP_Fhi_Hz">MDVP:Fhi(Hz) (102.145 to 592.030): </label>
+                <input type="text" id="MDVP_Fhi_Hz" name="MDVP_Fhi_Hz" required>
+            </div>
+            <div class="input-group">
+                <label for="MDVP_Flo_Hz">MDVP:Flo(Hz) (65.476 to 239.170): </label>
+                <input type="text" id="MDVP_Flo_Hz" name="MDVP_Flo_Hz" required>
+            </div>
+
+            <!-- Add the remaining input fields here -->
+       
+
+            <div class="input-group">
+                <label for="input5">Motor UPDRS: </label>
+                <input type="text" id="input5" name="motor_UPDRS" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input6">Total UPDRS: </label>
+                <input type="text" id="input6" name="total_UPDRS" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input7">Jitter (%): </label>
+                <input type="text" id="input7" name="Jitter_percent" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input8">Jitter (Abs): </label>
+                <input type="text" id="input8" name="Jitter_Abs" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input9">Jitter (RAP): </label>
+                <input type="text" id="input9" name="Jitter_RAP" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input10">Jitter (PPQ5): </label>
+                <input type="text" id="input10" name="Jitter_PPQ5" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input11">Jitter (DDP): </label>
+                <input type="text" id="input11" name="Jitter_DDP" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input12">Shimmer: </label>
+                <input type="text" id="input12" name="Shimmer" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input13">Shimmer (dB): </label>
+                <input type="text" id="input13" name="Shimmer_dB" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input14">Shimmer (APQ3): </label>
+                <input type="text" id="input14" name="Shimmer_APQ3" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input15">Shimmer (APQ5): </label>
+                <input type="text" id="input15" name="Shimmer_APQ5" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input16">MDVP:APQ: </label>
+                <input type="text" id="input16" name="MDVP_APQ" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input17">Shimmer (DDA): </label>
+                <input type="text" id="input17" name="Shimmer_DDA" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input18">NHR: </label>
+                <input type="text" id="input18" name="NHR" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input19">HNR: </label>
+                <input type="text" id="input19" name="HNR" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input20">RPDE: </label>
+                <input type="text" id="input20" name="RPDE" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input21">DFA: </label>
+                <input type="text" id="input21" name="DFA" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input22">Spread1: </label>
+                <input type="text" id="input22" name="Spread1" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input23">Spread2: </label>
+                <input type="text" id="input23" name="Spread2" required>
+            </div>
+
+            <div class="input-group">
+                <label for="input24">D2: </label>
+                <input type="text" id="input24" name="D2" required>
+            </div>
+            <div class="input-group">
+                <label for="input25">PPE: </label>
+                <input type="text" id="input25" name="PPE" required>
+            </div>
+
+            <input type="submit" value="Predict">
+        </form>
+        <br>
+        <a href="/index" class="back-button">Back</a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('../static/background_image.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+i {
+    margin-right: 10px;
+}
+
+#quote-container {
+    overflow: hidden;
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+#quote {
+    display: inline-block;
+    animation: slide 10s linear infinite;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Additional styling for Parkinson's Disease Detection page */
+
+#parkinson-container {
+    margin-top: 50px;
+}
+
+#parkinson-container h1 {
+    color: #0e0b0ba2;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+
+#parkinson-container form {
+    margin-top: 20px;
+}
+
+#parkinson-container .input-group {
+    margin-bottom: 20px;
+}
+
+#parkinson-container label {
+    color: #030303;
+    font-weight: bold;
+}
+
+#parkinson-container input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#parkinson-container input[type="submit"] {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#parkinson-container input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
