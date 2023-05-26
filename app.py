@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 
 def train_parkinsons_model():
+
     # Loading the data from the CSV file
     parkinsons_data = pd.read_csv('parkinsons.csv')
 
@@ -28,7 +29,7 @@ def train_parkinsons_model():
     filename = 'parkinsons_model.sav'
     pickle.dump(model, open(filename, 'wb'))
 
-def predict_parkinsons(name, features):
+def predict_parkinsons(name,age,sex,input1,input2,input3,input4,input5,input6,input7,input8,input9,input10,features):
     # Load the trained model
     loaded_model = pickle.load(open('parkinsons_model.sav', 'rb'))
 
@@ -38,28 +39,71 @@ def predict_parkinsons(name, features):
         'MDVP:Jitter(Abs)', 'MDVP:RAP', 'MDVP:PPQ', 'Jitter:DDP',
         'MDVP:Shimmer', 'MDVP:Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5',
         'MDVP:APQ', 'Shimmer:DDA', 'NHR', 'HNR', 'RPDE', 'DFA', 'spread1',
-        'spread2', 'D2', 'PPE'
-    ])
+        'spread2', 'D2', 'PPE'])
 
     # Make the prediction
     prediction = loaded_model.predict(input_data)
 
     if prediction[0] == 0:
-        return f"{name} does not have Parkinson's disease."
+        return f"""
+    <h1>Parkinson's Disease Prediction Analysis</h1>
+    <h2>Input Information:</h2>
+    <ul>
+        <li>Name: {name}</li>
+        <li>Age: {age}</li>
+        <li>Sex: {sex}</li>
+        <li>Jitter(%): {input1}</li>
+        <li>Jitter(Abs): {input2}</li>
+        <li>Jitter(RAP): {input3}</li>
+        <li>Jitter(PPQ5): {input4}</li>
+        <li>Jitter(DDP): {input5}</li>
+        <li>Shimmer: {input6}</li>
+        <li>Shimmer(dB): {input7}</li>
+        <li>Shimmer(APQ3): {input8}</li>
+        <li>Shimmer(APQ5): {input9}</li>
+        <li>Shimmer(APQ11): {input10}</li>
+    </ul>
+    <h2>Prediction Result:</h2>
+    <p>{name} does not have Parkinson's disease</p>
+    """
     else:
-        return f"{name} has Parkinson's disease."
+        return f"""
+    <h1>Parkinson's Disease Prediction Analysis</h1>
+    <h2>Input Information:</h2>
+    <ul>
+        <li>Name: {name}</li>
+        <li>Age: {age}</li>
+        <li>Sex: {sex}</li>
+        <li>Jitter(%): {input1}</li>
+        <li>Jitter(Abs): {input2}</li>
+        <li>Jitter(RAP): {input3}</li>
+        <li>Jitter(PPQ5): {input4}</li>
+        <li>Jitter(DDP): {input5}</li>
+        <li>Shimmer: {input6}</li>
+        <li>Shimmer(dB): {input7}</li>
+        <li>Shimmer(APQ3): {input8}</li>
+        <li>Shimmer(APQ5): {input9}</li>
+        <li>Shimmer(APQ11): {input10}</li>
+    </ul>
+    <h2>Prediction Result:</h2>
+    <p>{name} does  have Parkinson's disease</p>
+    """
+        
 
 # Train the model (only needs to be done once)
 train_parkinsons_model()
 
-# Example usage:
-name = "John Doe"
-features = [197.07600, 206.89600, 192.05500, 0.00289, 0.00001, 0.00166, 0.00168, 0.00498,
-            0.01098, 0.09700, 0.00563, 0.00680, 0.00802, 0.01689, 0.00339, 26.77500,
-            0.422229, 0.741367, -7.348300, 0.177551, 1.743867, 0.085569]
+# # Example usage:
+# name = "John Doe"
+# age=21
+# sex="female"
+# features = [197.07600, 206.89600, 192.05500, 0.00289, 0.00001, 0.00166, 0.00168, 0.00498,
+#             0.01098, 0.09700, 0.00563, 0.00680, 0.00802, 0.01689, 0.00339, 26.77500,
+#             0.422229, 0.741367, -7.348300, 0.177551, 1.743867, 0.085569]
 
-result = predict_parkinsons(name, features)
-print(result)
+# result = predict_parkinsons(name,age,sex,197.07600, 206.89600, 192.05500, 0.00289, 0.00001, 0.00166, 0.00168, 0.00498,
+#             0.01098, 0.09700,features)
+# print(result)
 
 
 
@@ -113,14 +157,14 @@ def parkinsons_disease():
             input11, input12, input13, input14, input15, input16, input17, input18, input19,
             input20, input21, input22
         ]
-        result = predict_parkinsons(name, features)
-        
+        result = predict_parkinsons(name,age,sex,input1,input2,input3,input4,input5,input6,input7,input8,input9,input10,features)
 
-        print(result)
-        
-        return result
+        return render_template('results.html', result=result)
+
         
     return render_template('parkinsons_disease.html')
+
+        
 
 if __name__ == '__main__':
     app.run()
