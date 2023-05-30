@@ -5,8 +5,94 @@ from sklearn.model_selection import train_test_split
 from sklearn import svm
 from sklearn.metrics import accuracy_score
 import pickle
+from sklearn.decomposition import PCA
+from werkzeug.utils import secure_filename
+import os
+import uuid
+from sklearn.linear_model import LogisticRegression 
+
 
 app = Flask(__name__)
+
+
+#Brain tumor detection start
+def trainData():
+    # Prepare/collect data
+    path = os.listdir('brain_tumor/Training')
+    classes = {'no_tumor':0, 'pituitary_tumor':1}
+    X = []
+    Y = []
+
+    for cls in classes:
+        pth = 'brain_tumor/Training/'+cls
+        for j in os.listdir(pth):
+            img = cv2.imread(pth+'/'+j, 0)
+            if img is not None:
+                # Resize the image
+                img = cv2.resize(img, (200, 200))
+                X.append(img)
+                Y.append(classes[cls])
+                print("Successfully loaded", len(X), "images")
+            else:
+                print("Failed to load the image.")
+
+    X = np.array(X)
+    Y = np.array(Y)
+
+    X_updated = X.reshape(len(X), -1)
+
+    # Feature Scaling
+    X_updated = X_updated / 255
+
+    # Feature Selection: PCA
+    pca = PCA(.98)
+    pca_train = pca.fit_transform(X_updated)
+
+    # Split Data
+    xtrain, xtest, ytrain, ytest = train_test_split(pca_train, Y, random_state=10, test_size=.20)
+
+    # Train Model
+    lg = LogisticRegression(C=0.1)
+    lg.fit(xtrain, ytrain)
+
+    # Save the trained model
+    lg.save('brain_tumor_model.pkl')
+
+def detect_brain_tumor(image_path):
+    # Load the trained model
+    lg = LogisticRegression()
+    lg.load('brain_tumor_model.pkl')
+
+    # Load the image
+    img = cv2.imread(image_path, 0)
+
+    if img is None:
+        print("Failed to load the image.")
+        return
+
+    # Resize the image
+    img = cv2.resize(img, (200, 200))
+
+    # Feature Scaling
+    img = img / 255
+
+    # Feature Selection: PCA
+    pca = PCA(.98)
+    pca_img = pca.fit_transform(img.reshape(1, -1))
+
+    # Perform prediction
+    prediction = lg.predict(pca_img)
+
+    # Define the classes
+    classes = {0: 'No Tumor', 1: 'Positive Tumor'}
+
+    # Print the result
+    print("Prediction:", classes[prediction[0]])
+
+
+#Brain tumor detection ends
+
+
 
 # Diabetes DETECTION start
 
@@ -275,6 +361,43 @@ def diabetes_disease():
 
     return render_template('diabetes_disease.html')
 
+@app.route('/brain_tumor_detection', methods=['GET', 'POST'])
+def brain_tumor_detection():
+    if request.method == 'POST':
+        # Get the uploaded file
+        file = request.files['file']
+        
+        # file_path = 'temp/' + secure_filename(file.filename)
+        # file.save(file_path)
+
+        # if not os.path.exists('temp'):
+        #     os.makedirs('temp')
+
+        # # Save the uploaded file
+        # filename = secure_filename(file.filename)
+        # file_path = os.path.join('temp', filename)
+        # file.save(file_path)
+        if not os.path.exists('temp'):
+            os.makedirs('temp')
+
+        # Generate a unique filename
+        filename = str(uuid.uuid4()) + secure_filename(file.filename)
+        file_path = os.path.join('temp', filename)
+        file.save(file_path)
+
+
+        # Load the image using OpenC
+
+        detect_brain_tumor(file_path)
+
+        # Perform brain tumor detection on the uploaded file
+        # Add your code here to process the uploaded file and perform the detection
+
+        # Return the detection result
+        result = "Brain tumor detected"  # Replace this with your actual result
+        return render_template('brain_tumor_results.html', result=result)
+
+    return render_template('brain_tumor_Detection.html')
 
 if __name__ == '__main__':
     app.run()

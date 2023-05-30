@@ -35,6 +35,21 @@
         .result-box p {
             font-size: 18px;
         }
+
+        .go-back-button {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .go-back-button a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -48,6 +63,9 @@
     <div id="result" style="display: none;">
         <div class="result-box">
             <p>{{ result|safe }}</p>
+            <div class="go-back-button">
+                <a href="javascript:history.back()">Go Back</a>
+            </div>
         </div>
     </div>
 </body>

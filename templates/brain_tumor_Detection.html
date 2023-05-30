@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brain Tumor Detection</title>
+</head>
+<body>
+    <h1>Brain Tumor Detection</h1>
+    <form action="{{ url_for('brain_tumor_detection') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".jpg, .jpeg, .png">
+        <input type="submit" value="Detect Brain Tumor">
+    </form>
+</body>
+</html>
