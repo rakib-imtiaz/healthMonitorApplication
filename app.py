@@ -8,6 +8,97 @@ import pickle
 
 app = Flask(__name__)
 
+# Diabetes DETECTION start
+
+
+def diabetes_detection():
+    # Loading the diabetes dataset to a pandas DataFrame
+    diabetes_dataset = pd.read_csv('diabetes.csv')
+
+    # Separating the data and labels
+    X = diabetes_dataset.drop(columns='Outcome', axis=1)
+    Y = diabetes_dataset['Outcome']
+
+    # Train Test Split
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, stratify=Y, random_state=2)
+
+    # Training the Model
+    classifier = svm.SVC(kernel='linear')
+    classifier.fit(X_train, Y_train)
+
+    # Model Evaluation - Accuracy Score
+    X_train_prediction = classifier.predict(X_train)
+    training_data_accuracy = accuracy_score(X_train_prediction, Y_train)
+
+    X_test_prediction = classifier.predict(X_test)
+    test_data_accuracy = accuracy_score(X_test_prediction, Y_test)
+
+    # Making a Predictive System
+    def predict_diabetes(input_data):
+        input_data_as_numpy_array = np.asarray(input_data)
+        input_data_reshaped = input_data_as_numpy_array.reshape(1, -1)
+        prediction = classifier.predict(input_data_reshaped)
+        if prediction[0] == 0:
+        #  return f"The person is not diabetic: {input_data[3]}"
+         return f"""
+    <h1>Diabetic Prediction Analysis</h1>
+    <h2>Input Information:</h2>
+    <ul>
+       <li>Pregnancies: {input_data[0]}</li>
+        <li>Glucose: {input_data[1]}</li>
+        <li>Blood Pressure: {input_data[2]}</li>
+        <li>Skin Thickness: {input_data[3]}</li>
+        <li>Insulin: {input_data[4]}</li>
+        <li>BMI: {input_data[5]}</li>
+        <li>Diabetes Pedigree: {input_data[6]}</li>
+        <li>Age Onset: {input_data[7]}</li>
+    </ul>
+    <h2>Prediction Result:</h2>
+    <p> The person is not diabetic</p>"""
+        else:
+            return f"""
+    <h1>Diabetic Prediction Analysis</h1>
+    <h2>Input Information:</h2>
+    <ul>
+       <li>Pregnancies: {input_data[0]}</li>
+        <li>Glucose: {input_data[1]}</li>
+        <li>Blood Pressure: {input_data[2]}</li>
+        <li>Skin Thickness: {input_data[3]}</li>
+        <li>Insulin: {input_data[4]}</li>
+        <li>BMI: {input_data[5]}</li>
+        <li>Diabetes Pedigree: {input_data[6]}</li>
+        <li>Age Onset: {input_data[7]}</li>
+    </ul>
+    <h2>Prediction Result:</h2>
+    <p> 'The person is diabetic</p>"""
+
+    # Saving the trained model
+    filename = 'diabetes_model.sav'
+    pickle.dump(classifier, open(filename, 'wb'))
+
+    # Loading the saved model
+    loaded_model = pickle.load(open('diabetes_model.sav', 'rb'))
+
+    return predict_diabetes, X.columns
+
+predict_diabetes, features = diabetes_detection()
+
+# Example usage
+# input_data = (5, 166, 72, 19, 175, 25.8, 0.587, 51)
+# prediction = predict_diabetes(input_data)
+# print(prediction)
+
+# Printing the feature columns
+for column in features:
+    print(column)
+
+
+
+
+
+# Diabetes DETECTION END
+
+# PARKINSON DETECTION START
 
 def train_parkinsons_model():
 
@@ -88,7 +179,7 @@ def predict_parkinsons(name,age,sex,input1,input2,input3,input4,input5,input6,in
     <h2>Prediction Result:</h2>
     <p>{name} does  have Parkinson's disease</p>
     """
-        
+     
 
 # Train the model (only needs to be done once)
 train_parkinsons_model()
@@ -164,7 +255,26 @@ def parkinsons_disease():
         
     return render_template('parkinsons_disease.html')
 
-        
+@app.route('/diabetes_detection', methods=['GET', 'POST'])
+def diabetes_disease():
+    if request.method == 'POST':
+        input_data = (
+            float(request.form.get('pregnancies')),
+            float(request.form.get('glucose')),
+            float(request.form.get('bloodpressure')),
+            float(request.form.get('skinthickness')),
+            float(request.form.get('insulin')),
+            float(request.form.get('bmi')),
+            float(request.form.get('diabetespedigreefunction')),
+            float(request.form.get('age'))
+        )
+
+        prediction = predict_diabetes(input_data)
+
+        return render_template('diabetes_results.html', prediction=prediction)
+
+    return render_template('diabetes_disease.html')
+
 
 if __name__ == '__main__':
     app.run()

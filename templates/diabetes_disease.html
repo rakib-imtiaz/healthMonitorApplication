@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Diabetics Detection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .range {
+      font-size: 12px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Diabetics Detection</h1>
+  <form action="/diabetes_detection" method="post">
+    <label for="pregnancies">Pregnancies:</label>
+    <input type="number" id="pregnancies" name="pregnancies" min="0" required>
+    <span class="range">Range: 0 or more</span>
+
+    <label for="glucose">Glucose:</label>
+    <input type="number" id="glucose" name="glucose" min="0" required>
+    <span class="range">Range: 0 or more</span>
+
+    <label for="bloodpressure">Blood Pressure:</label>
+    <input type="number" id="bloodpressure" name="bloodpressure" min="0" required>
+    <span class="range">Range: 0 or more</span>
+
+    <label for="skinthickness">Skin Thickness:</label>
+    <input type="number" id="skinthickness" name="skinthickness" min="0" required>
+    <span class="range">Range: 0 or more</span>
+
+    <label for="insulin">Insulin:</label>
+    <input type="number" id="insulin" name="insulin" min="0" required>
+    <span class="range">Range: 0 or more</span>
+
+    <label for="bmi">BMI:</label>
+    <input type="number" id="bmi" name="bmi" min="0" step="0.1" required>
+    <span class="range">Range: 0 or more</span>
+
+    <label for="diabetespedigreefunction">Diabetes Pedigree Function:</label>
+    <input type="number" id="diabetespedigreefunction" name="diabetespedigreefunction" min="0" step="0.001" required>
+    <span class="range">Range: 0 or more</span>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" min="0" required>
+
+
+    <input type="submit" value="Submit">
+  </form>
+</body>
+</html>

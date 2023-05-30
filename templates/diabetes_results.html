@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Diabetes Disease Prediction Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #666;
+            margin-top: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            color: #333;
+            font-size: 18px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .result-positive {
+            color: #1abc9c;
+            font-weight: bold;
+        }
+
+        .result-negative {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Diabetes Disease Prediction Results</h1>
+    <h2>Prediction Result:</h2>
+    <p class="result-positive">{{ prediction|safe }}</p>
+
+</body>
+
+</html>
