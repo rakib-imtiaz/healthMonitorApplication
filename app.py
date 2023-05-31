@@ -10,87 +10,15 @@ from werkzeug.utils import secure_filename
 import os
 import uuid
 from sklearn.linear_model import LogisticRegression 
+import cv2
+import matplotlib.pyplot as plt
+from sklearn.svm import SVC
+from flask import url_for
+from flask import send_from_directory
 
 
 app = Flask(__name__)
 
-
-#Brain tumor detection start
-def trainData():
-    # Prepare/collect data
-    path = os.listdir('brain_tumor/Training')
-    classes = {'no_tumor':0, 'pituitary_tumor':1}
-    X = []
-    Y = []
-
-    for cls in classes:
-        pth = 'brain_tumor/Training/'+cls
-        for j in os.listdir(pth):
-            img = cv2.imread(pth+'/'+j, 0)
-            if img is not None:
-                # Resize the image
-                img = cv2.resize(img, (200, 200))
-                X.append(img)
-                Y.append(classes[cls])
-                print("Successfully loaded", len(X), "images")
-            else:
-                print("Failed to load the image.")
-
-    X = np.array(X)
-    Y = np.array(Y)
-
-    X_updated = X.reshape(len(X), -1)
-
-    # Feature Scaling
-    X_updated = X_updated / 255
-
-    # Feature Selection: PCA
-    pca = PCA(.98)
-    pca_train = pca.fit_transform(X_updated)
-
-    # Split Data
-    xtrain, xtest, ytrain, ytest = train_test_split(pca_train, Y, random_state=10, test_size=.20)
-
-    # Train Model
-    lg = LogisticRegression(C=0.1)
-    lg.fit(xtrain, ytrain)
-
-    # Save the trained model
-    lg.save('brain_tumor_model.pkl')
-
-def detect_brain_tumor(image_path):
-    # Load the trained model
-    lg = LogisticRegression()
-    lg.load('brain_tumor_model.pkl')
-
-    # Load the image
-    img = cv2.imread(image_path, 0)
-
-    if img is None:
-        print("Failed to load the image.")
-        return
-
-    # Resize the image
-    img = cv2.resize(img, (200, 200))
-
-    # Feature Scaling
-    img = img / 255
-
-    # Feature Selection: PCA
-    pca = PCA(.98)
-    pca_img = pca.fit_transform(img.reshape(1, -1))
-
-    # Perform prediction
-    prediction = lg.predict(pca_img)
-
-    # Define the classes
-    classes = {0: 'No Tumor', 1: 'Positive Tumor'}
-
-    # Print the result
-    print("Prediction:", classes[prediction[0]])
-
-
-#Brain tumor detection ends
 
 
 
@@ -362,21 +290,13 @@ def diabetes_disease():
     return render_template('diabetes_disease.html')
 
 @app.route('/brain_tumor_detection', methods=['GET', 'POST'])
-def brain_tumor_detection():
-    if request.method == 'POST':
+
+def brain_tumor():
+
+     if request.method == 'POST':
         # Get the uploaded file
         file = request.files['file']
         
-        # file_path = 'temp/' + secure_filename(file.filename)
-        # file.save(file_path)
-
-        # if not os.path.exists('temp'):
-        #     os.makedirs('temp')
-
-        # # Save the uploaded file
-        # filename = secure_filename(file.filename)
-        # file_path = os.path.join('temp', filename)
-        # file.save(file_path)
         if not os.path.exists('temp'):
             os.makedirs('temp')
 
@@ -384,20 +304,159 @@ def brain_tumor_detection():
         filename = str(uuid.uuid4()) + secure_filename(file.filename)
         file_path = os.path.join('temp', filename)
         file.save(file_path)
+        print(file_path)
+
+        result=detect_brain_tumour(file_path)
+        # result="passed"
+
+        print(file_path)
+        file_path = url_for('uploaded_file', filename=filename)
 
 
-        # Load the image using OpenC
+        return render_template('brain_tumor_results.html', result=result, file_path=file_path)
 
-        detect_brain_tumor(file_path)
+        # return render_template('brain_tumor_results.html',result=result)
 
-        # Perform brain tumor detection on the uploaded file
-        # Add your code here to process the uploaded file and perform the detection
+     return render_template('brain_tumor_Detection.html')
 
-        # Return the detection result
-        result = "Brain tumor detected"  # Replace this with your actual result
-        return render_template('brain_tumor_results.html', result=result)
 
-    return render_template('brain_tumor_Detection.html')
+def detect_brain_tumour(image_location):
+
+    # Prepare/collect data
+    path = os.listdir('brain_tumor/Training')
+    classes = {'no_tumor': 0, 'pituitary_tumor': 1}
+
+    X = []
+    Y = []
+
+    for cls in classes:
+        pth = 'brain_tumor/Training/' + cls
+        for j in os.listdir(pth):
+            img = cv2.imread(pth+'/'+j, 0)
+            if img is not None:
+                # Resize the image
+                img = cv2.resize(img, (200, 200))
+                X.append(img)
+                Y.append(classes[cls])
+                print("Successfully loaded:", j)
+            else:
+                print("Failed to load the image:", j)
+
+    X = np.array(X)
+    Y = np.array(Y)
+
+    # Visualize data
+    # plt.imshow(X[0], cmap='gray')
+    # plt.show()
+
+    # Prepare data
+    X_updated = X.reshape(len(X), -1)
+
+    # Split Data
+    xtrain, xtest, ytrain, ytest = train_test_split(X_updated, Y, random_state=10, test_size=.20)
+
+    # Feature Scaling
+    xtrain = xtrain / 255
+    xtest = xtest / 255
+
+    # Feature Selection: PCA
+    pca = PCA(.98)
+    pca_train = pca.fit_transform(xtrain)
+    pca_test = pca.transform(xtest)
+
+    # Train Model
+    lg = LogisticRegression(C=0.1)
+    lg.fit(pca_train, ytrain)
+
+    sv = SVC()
+    sv.fit(pca_train, ytrain)
+
+    # Evaluation
+
+    training_score=lg.score(pca_train, ytrain)
+    testing_score=lg.score(pca_test, ytest)
+    training_score_2=sv.score(pca_train, ytrain)
+    testing_score_2=sv.score(pca_test, ytest)
+
+
+
+    print("Logistic Regression:")
+    print("Training Score:", training_score)
+    print("Testing Score:", testing_score)
+    print("\nSVM:")
+    print("Training Score:",training_score_2)
+    print("Testing Score:", testing_score_2)
+
+   
+
+
+
+
+
+    # Testing with a given image
+    # image_path = '/home/mohammadnoman/Freelancing_workspace/python_works/healthMonitorWebApplicationUsingMachinelearning/brain_tumor/Testing/pituitary_tumor/image(6).jpg'  # Replace with the actual image path
+
+    image_path = image_location # Replace with the actual image path
+    img = cv2.imread(image_path, 0)
+    resized_img = cv2.resize(img, (200, 200))
+    input_img = resized_img.reshape(1, -1) / 255
+
+    # Make prediction
+    prediction = lg.predict(pca.transform(input_img))
+
+    # Map the predicted label to the corresponding class
+    class_mapping = {0: 'no_tumor', 1: 'pituitary_tumor'}
+    predicted_class = class_mapping[prediction[0]]
+
+
+    data= f"""
+    <h1>Brain Tumor Prediction Analysis</h1>
+    <h2>Logistic Regression:</h2>
+    <ul>
+       <li>Training Score: {training_score}</li>
+        <li>Testing Score: {testing_score}</li>
+        <li>SVM:</li>
+        <li>Training Score: { training_score_2}</li>
+        <li>Testing Score: { testing_score_2}</li>
+      
+    </ul>
+    <h2>Prediction Result:</h2>
+    <p> {predicted_class}</p>"""
+
+    # data= f"""
+    # <h1>Brain Tumor Prediction Analysis</h1>
+    # <h2>Logistic Regression:</h2>
+    # <ul>
+    #    <li>Training Score: {lg.score(pca_train, ytrain)}</li>
+    #     <li>Testing Score: { lg.score(pca_test, ytest)}</li>
+    #     <li>SVM:</li>
+    #     <li>Training Score: { sv.score(pca_train, ytrain)}</li>
+    #     <li>Testing Score: { sv.score(pca_train, ytest)}</li>
+    #     <li>Insulin: {input_data[4]}</li>
+    #     <li>BMI: {input_data[5]}</li>
+    #     <li>Diabetes Pedigree: {input_data[6]}</li>
+    #     <li>Age Onset: {input_data[7]}</li>
+    # </ul>
+    # <h2>Prediction Result:</h2>
+    # <p> {predicted_class}</p>"""
+
+
+
+
+
+    # Display the result
+
+    print(predicted_class)
+
+    result=data
+    # return render_template('brain_tumor_results.html',result=result)
+    return result
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory('temp', filename)
+
 
 if __name__ == '__main__':
     app.run()

@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('../static/background_image.jpg');
+    /* background-image: url('../static/background_image.jpg'); */
+    background-image: url('../static/heartBeat.gif');
     background-size: cover;
     background-repeat: no-repeat;
     margin: 0;
@@ -9,7 +10,7 @@ body {
 
 .container {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 40px auto;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;

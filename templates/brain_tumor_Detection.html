@@ -1,13 +1,167 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Brain Tumor Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("image1.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: backgroundAnimation 42s infinite;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 120px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #544caf;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 10px;
+
+        }
+
+        .go-back-button {
+            padding: 10px 20px;
+            background-color: #d02a2a !important;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .loading:before {
+            content: "Training data, processing data...";
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                content: "Training data, processing data...";
+                color: #ffffff;
+                font-size: medium;
+            }
+
+            50% {
+                content: "Training data, processing data.";
+                color: #ffcc00;
+                font-size: medium;
+
+            }
+
+            100% {
+                content: "Training data, processing data..";
+                color: #07fff7;
+                font-size: medium;
+
+            }
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background-image: url("/static/brain_1.gif");
+            }
+
+            16.66% {
+                background-image: url("/static/brain_2.gif");
+            }
+
+            33.33% {
+                background-image: url("/static/brain_3.gif");
+            }
+
+            50% {
+                background-image: url("/static/brain_3.gif");
+            }
+
+            66.66% {
+                background-image: url("/static/brain_4.gif");
+            }
+
+            83.33% {
+                background-image: url("/static/brain_5.gif");
+            }
+
+            100% {
+                background-image: url("/static/brain_6.jpg");
+            }
+        }
+    </style>
+    <script>
+        function showLoading() {
+            var form = document.getElementById("uploadForm");
+            var loading = document.getElementById("loading");
+            form.style.display = "none";
+            loading.style.display = "block";
+        }
+    </script>
 </head>
+
 <body>
     <h1>Brain Tumor Detection</h1>
-    <form action="{{ url_for('brain_tumor_detection') }}" method="post" enctype="multipart/form-data">
+    <form id="uploadForm" action="/brain_tumor_detection" method="post" enctype="multipart/form-data"
+        onsubmit="showLoading()">
         <input type="file" name="file" accept=".jpg, .jpeg, .png">
         <input type="submit" value="Detect Brain Tumor">
+
+        <br>
+
+        <!-- <div class="go-back-button">
+            <a href="javascript:history.back()">Go Back</a>
+        </div>
+         -->
+        <!-- <input id="goBackBtn" type="submit" value="Go Back"> -->
     </form>
+
+    <form action="/" method="get">
+        <input class="go-back-button" type="submit" value="Go Back">
+    </form>
+
+    <div id="loading" class="loading"></div>
 </body>
+
 </html>

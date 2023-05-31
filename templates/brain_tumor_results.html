@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Detecton Results</title>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+        body {
+            background-image: url('/static/brain_3.gif');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .loading-animation {
+            font-size: 20px;
+            text-align: center;
+            margin-top: 200px;
+            color: white;
+        }
+
+        .result-box {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            padding: 20px;
+            margin: 50px auto;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .result-box p {
+            font-size: 18px;
+        }
+
+        .go-back-button {
+            padding: 10px 20px;
+            background-color: #d02a2a !important;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .go-back-button a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="loading-animation" id="loading">
+        <p>Getting Results...</p>
+        <p>Fetching image...</p>
+    </div> -->
+
+    <div id="result" >
+        <div class="result-box">
+            <p>{{ result|safe }}</p>
+
+            <img src="{{ file_path }}" alt="Uploaded Image" style="max-width: 500px;">
+            <br>
+            <br>
+            <br>
+            <form action="/" method="get">
+                <input class="go-back-button" type="submit" value="Go Back">
+            </form>
+
+            <!-- <div class="go-back-button">
+                <a href="javascript:history.back()">Go Back</a>
+            </div> -->
+        </div>
+    </div>
+</body>
+
+</html>
